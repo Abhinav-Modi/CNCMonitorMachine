@@ -19,7 +19,7 @@ namespace CNC
 
             cncMonitor.AddObserver(environmentAlertObserver, isMachineObserver: false);
 
-            cncMonitor.UpdateCNCData(36.0f, 0.6f, 400, 0x01,DateTime.Now);
+            cncMonitor.UpdateCNCData(38.0f, 0.6f, 400, 0x01,DateTime.Now);
         }
     }
 }
