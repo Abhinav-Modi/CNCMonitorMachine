@@ -27,16 +27,23 @@ namespace CNC
 
         private void CheckAndNotify<T>(T data, string dataType, TimeSpan reportingInterval, Func<bool> condition, bool isMachineObserver)
         {
-            if (IsTimeToReport(dataType, reportingInterval) && condition())
+            if (!IsTimeToReport(dataType, reportingInterval) || !condition())
             {
-                IAlert alert = isMachineObserver
-                    ? (IAlert)new MachineAlert($"{dataType} alert: {data}")
-                    : new EnvironmentAlert($"{dataType} alert: {data}.");
-
-                Notify(alert);
+                return;
             }
+
+            IAlert alert = CreateAlert(dataType, data, isMachineObserver);
+            Notify(alert);
             lastReportedTimestamps[dataType] = DateTime.Now;
         }
+
+        private IAlert CreateAlert<T>(string dataType, T data, bool isMachineObserver)
+        {
+            return isMachineObserver
+                ? (IAlert)new MachineAlert($"{dataType} alert: {data}")
+                : new EnvironmentAlert($"{dataType} alert: {data}.");
+        }
+
 
 
         private bool IsTimeToReport(string dataType, TimeSpan reportingInterval)
